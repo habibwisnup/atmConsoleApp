@@ -7,6 +7,9 @@ import org.habibwisnup.utils.errorHandler.ErrorHandler;
 import org.habibwisnup.utils.errorHandler.exceptions.InsufficientBalanceException;
 import org.habibwisnup.utils.errorHandler.exceptions.InvalidAmountException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CustomerService implements ICustomerService {
     private final Customer customer;
 
@@ -43,9 +46,6 @@ public class CustomerService implements ICustomerService {
     @Override
     public void addDebt(int amount) {
         try {
-            if (amount <= 0) {
-                throw new InvalidAmountException(MessageConstant.INVALID_AMOUNT_MESSAGE);
-            }
             customer.setDebt(customer.getDebt() + amount);
         } catch (Exception e) {
             ErrorHandler.handleException(e);

@@ -3,7 +3,6 @@ package org.habibwisnup.factory.commands;
 import org.habibwisnup.factory.Command;
 import org.habibwisnup.managers.CustomerManager;
 import org.habibwisnup.utils.errorHandler.ErrorHandler;
-import org.habibwisnup.utils.errorHandler.exceptions.GeneralException;
 
 public class TransferCommand implements Command {
 
@@ -25,10 +24,40 @@ public class TransferCommand implements Command {
                 return;
             }
 
-            sender.withdraw(amount);
-            receiver.deposit(amount);
+            var senderBalance = sender.getCustomer().getBalance();
+            var transferableAmount = Math.min(amount, senderBalance);
+            var debtAmount = amount - transferableAmount;
 
-            System.out.println("Transferred $" + amount + " to " + targetName);
+            int senderDebtToReceiver = receiver.getCustomer().getDebtToPay(sender.getCustomer().getName());
+            int amountToRepayDebt = Math.min(transferableAmount, senderDebtToReceiver);
+
+            if (amountToRepayDebt > 0) {
+                receiver.reduceDebt(amountToRepayDebt);
+                receiver.getCustomer().reduceDebtFromCustomer(sender.getCustomer().getName(), amountToRepayDebt);
+
+                transferableAmount -= amountToRepayDebt;
+                System.out.println("Repaid $" + amountToRepayDebt + " of debt to " + receiver.getCustomer().getName());
+            }
+
+            if (transferableAmount > 0) {
+                sender.withdraw(transferableAmount);
+                receiver.deposit(transferableAmount);
+                System.out.println("Transferred $" + transferableAmount + " to " + receiver.getCustomer().getName());
+            }
+
+            if (debtAmount > 0) {
+                sender.addDebt(debtAmount);
+                receiver.addDebt(-debtAmount);
+                sender.getCustomer().addDebtFromCustomer(receiver.getCustomer().getName(), debtAmount);
+                sender.getCustomer().displayDebts( receiver.getCustomer().getName());
+            }
+            if(sender.getCustomer().getDebtToPay(receiver.getCustomer().getName()) > 0 && !(debtAmount>0)) {
+                sender.reduceDebt(amount);
+                receiver.reduceDebt(amount);
+                sender.getCustomer().reduceDebtFromCustomer(receiver.getCustomer().getName(), amount);
+                sender.getCustomer().displayDebts( receiver.getCustomer().getName());
+            }
+
             System.out.println("Your balance is $" + sender.getCustomer().getBalance());
         } catch (Exception e) {
             ErrorHandler.handleException(e);

@@ -3,6 +3,9 @@ package org.habibwisnup.services.impl;
 import org.habibwisnup.utils.MessageConstant;
 import org.habibwisnup.models.Customer;
 import org.habibwisnup.services.interfaces.ICustomerService;
+import org.habibwisnup.utils.errorHandler.ErrorHandler;
+import org.habibwisnup.utils.errorHandler.exceptions.InsufficientBalanceException;
+import org.habibwisnup.utils.errorHandler.exceptions.InvalidAmountException;
 
 public class CustomerService implements ICustomerService {
     private final Customer customer;
@@ -12,25 +15,53 @@ public class CustomerService implements ICustomerService {
     }
     @Override
     public void deposit(int amount) {
-        customer.setBalance(customer.getBalance() + amount);
+        try {
+            if (amount <= 0) {
+                throw new InvalidAmountException(MessageConstant.INVALID_AMOUNT_MESSAGE);
+            }
+            customer.setBalance(customer.getBalance() + amount);
+        } catch (Exception e) {
+            ErrorHandler.handleException(e);
+        }
     }
 
     @Override
     public void withdraw(int amount) {
-        if (amount > customer.getBalance()) {
-            throw new IllegalArgumentException(MessageConstant.INSUFFICIENT_BALANCE_MESSAGE);
+        try {
+            if (amount <= 0) {
+                throw new InvalidAmountException(MessageConstant.INVALID_AMOUNT_MESSAGE);
+            }
+            if (amount > customer.getBalance()) {
+                throw new InsufficientBalanceException(MessageConstant.INSUFFICIENT_BALANCE_MESSAGE);
+            }
+            customer.setBalance(customer.getBalance() - amount);
+        } catch (Exception e) {
+            ErrorHandler.handleException(e);
         }
-        customer.setBalance(customer.getBalance() - amount);
     }
 
     @Override
     public void addDebt(int amount) {
-        customer.setDebt(customer.getDebt() + amount);
+        try {
+            if (amount <= 0) {
+                throw new InvalidAmountException(MessageConstant.INVALID_AMOUNT_MESSAGE);
+            }
+            customer.setDebt(customer.getDebt() + amount);
+        } catch (Exception e) {
+            ErrorHandler.handleException(e);
+        }
     }
 
     @Override
     public void reduceDebt(int amount) {
-        customer.setDebt(customer.getDebt() - amount);
+        try {
+            if (amount <= 0) {
+                throw new InvalidAmountException(MessageConstant.INVALID_AMOUNT_MESSAGE);
+            }
+            customer.setDebt(customer.getDebt() - amount);
+        } catch (Exception e) {
+            ErrorHandler.handleException(e);
+        }
     }
 
     @Override

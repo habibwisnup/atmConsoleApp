@@ -1,5 +1,6 @@
 package org.habibwisnup.services.impl;
 
+import org.habibwisnup.Utils.MessageConstant;
 import org.habibwisnup.models.Customer;
 import org.habibwisnup.services.interfaces.ICustomerService;
 
@@ -17,7 +18,7 @@ public class CustomerService implements ICustomerService {
     @Override
     public void withdraw(int amount) {
         if (amount > customer.getBalance()) {
-            throw new IllegalArgumentException("Insufficient balance.");
+            throw new IllegalArgumentException(MessageConstant.INSUFFICIENT_BALANCE_MESSAGE);
         }
         customer.setBalance(customer.getBalance() - amount);
     }

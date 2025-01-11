@@ -1,6 +1,6 @@
 package org.habibwisnup.services.impl;
 
-import org.habibwisnup.Utils.MessageConstant;
+import org.habibwisnup.utils.MessageConstant;
 import org.habibwisnup.models.Customer;
 import org.habibwisnup.services.interfaces.ICustomerService;
 

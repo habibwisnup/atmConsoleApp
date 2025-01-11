@@ -15,7 +15,7 @@ public class Main {
         CommandFactory commandFactory = new CommandFactory(customerManager);
         CommandInvoker commandInvoker = new CommandInvoker();
 
-        System.out.println("Welcome to the HABIB ATM! Type your command:");
+        System.out.println("Welcome to the HABIB ATM! Type 'help' for available commands.");
 
         Scanner scanner = new Scanner(System.in);
 

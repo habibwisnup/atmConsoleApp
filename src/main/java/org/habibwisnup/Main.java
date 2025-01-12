@@ -23,12 +23,11 @@ public class Main {
             try {
                 System.out.print("> ");
                 String input = scanner.nextLine().trim();
-                String[] parts = input.split(" ");
-
-                if (parts[0].equalsIgnoreCase("help")) {
-                    displayHelpMenu();
+                if (input.isEmpty()) {
                     continue;
                 }
+
+                String[] parts = input.split(" ");
 
                 Command command = commandFactory.getCommand(parts);
                 commandInvoker.execute(command);
@@ -37,17 +36,5 @@ public class Main {
                 ErrorHandler.handleException(e);
             }
         }
-    }
-
-    private static void displayHelpMenu() {
-        System.out.println("Available Commands:");
-        System.out.println("  help                - Show this help menu.");
-        System.out.println("  login <username>    - Log in as a specific user.");
-        System.out.println("  logout              - Log out of the current session.");
-        System.out.println("  deposit <amount>    - Deposit a specified amount of money.");
-        System.out.println("  withdraw <amount>   - Withdraw a specified amount of money.");
-        System.out.println("  transfer <recipient> <amount> - Transfer money to another user.");
-        System.out.println("  balance             - Display your current balance.");
-        System.out.println("  exit                - Exit the ATM Console App.");
     }
 }

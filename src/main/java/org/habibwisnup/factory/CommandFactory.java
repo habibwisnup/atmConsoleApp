@@ -25,6 +25,7 @@ public class CommandFactory {
         commandCollections.put(MessageConstant.BALANCE_COMMAND, new CommandMetadata(() -> new BalanceCommand(customerManager), true));
         commandCollections.put(MessageConstant.LOGOUT_COMMAND, new CommandMetadata(() -> new LogoutCommand(customerManager), true));
         commandCollections.put(MessageConstant.EXIT_COMMAND, new CommandMetadata(ExitCommand::new, false));
+        commandCollections.put(MessageConstant.HELP_COMMAND, new CommandMetadata(HelpCommand::new, false));
     }
 
     public Command getCommand(String[] parts) {

@@ -7,32 +7,46 @@ import org.habibwisnup.utils.errorHandler.exceptions.GeneralException;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class CommandFactory {
-    private final Map<String, Supplier<Command>> commandCollections = new HashMap<>();
+    private final Map<String, CommandMetadata> commandCollections = new HashMap<>();
+    private final CustomerManager customerManager;
 
     public CommandFactory(CustomerManager customerManager) {
+        this.customerManager = customerManager;
         registerCommands(customerManager);
     }
 
     private void registerCommands(CustomerManager customerManager) {
-        commandCollections.put(MessageConstant.LOGIN_COMMAND, () -> new LoginCommand(customerManager));
-        commandCollections.put(MessageConstant.DEPOSIT_COMMAND, () -> new DepositCommand(customerManager));
-        commandCollections.put(MessageConstant.WITHDRAW_COMMAND, () -> new WithdrawCommand(customerManager));
-        commandCollections.put(MessageConstant.TRANSFER_COMMAND, () -> new TransferCommand(customerManager));
-        commandCollections.put(MessageConstant.BALANCE_COMMAND, () -> new BalanceCommand(customerManager));
-        commandCollections.put(MessageConstant.LOGOUT_COMMAND, () -> new LogoutCommand(customerManager));
+        commandCollections.put(MessageConstant.LOGIN_COMMAND, new CommandMetadata(() -> new LoginCommand(customerManager), false));
+        commandCollections.put(MessageConstant.DEPOSIT_COMMAND, new CommandMetadata(() -> new DepositCommand(customerManager), true));
+        commandCollections.put(MessageConstant.WITHDRAW_COMMAND, new CommandMetadata(() -> new WithdrawCommand(customerManager), true));
+        commandCollections.put(MessageConstant.TRANSFER_COMMAND, new CommandMetadata(() -> new TransferCommand(customerManager), true));
+        commandCollections.put(MessageConstant.BALANCE_COMMAND, new CommandMetadata(() -> new BalanceCommand(customerManager), true));
+        commandCollections.put(MessageConstant.LOGOUT_COMMAND, new CommandMetadata(() -> new LogoutCommand(customerManager), true));
+        commandCollections.put(MessageConstant.EXIT_COMMAND, new CommandMetadata(ExitCommand::new, false));
     }
 
     public Command getCommand(String[] parts) {
-        String commandKey = parts[0].toLowerCase();
-        Supplier<Command> commandSupplier = commandCollections.get(commandKey);
-
-        if (commandSupplier == null) {
-            throw new GeneralException(MessageConstant.UNKNOWN_COMMAND_MESSAGE);
+        if (parts.length == 0 || parts[0].isEmpty()) {
+            throw new GeneralException(MessageConstant.NO_COMMAND_PROVIDED_MESSAGE + MessageConstant.HELP_COMMAND_MESSAGE);
         }
 
-        return commandSupplier.get().initialize(parts);
+        var commandKey = parts[0].toLowerCase();
+        var commandMetadata = commandCollections.get(commandKey);
+
+        if (commandMetadata == null) {
+            throw new GeneralException(MessageConstant.UNKNOWN_COMMAND_MESSAGE + commandKey+" "+MessageConstant.HELP_COMMAND_MESSAGE);
+        }
+
+        if (commandMetadata.requiresLogin && !customerManager.isLoggedIn()) {
+            throw new GeneralException(MessageConstant.LOGIN_REQUIRED_MESSAGE);
+        }
+
+        try {
+            return commandMetadata.commandSupplier.get().initialize(parts);
+        } catch (Exception e) {
+            throw new GeneralException(MessageConstant.INVALID_ARGUMENT_MESSAGE + commandKey + " : " + e.getMessage());
+        }
     }
 }

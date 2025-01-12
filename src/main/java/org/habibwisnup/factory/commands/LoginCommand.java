@@ -2,6 +2,7 @@ package org.habibwisnup.factory.commands;
 
 import org.habibwisnup.factory.Command;
 import org.habibwisnup.managers.CustomerManager;
+import org.habibwisnup.utils.MessageConstant;
 
 public class LoginCommand implements Command {
 
@@ -19,6 +20,9 @@ public class LoginCommand implements Command {
 
     @Override
     public Command initialize(String[] parts) {
+        if (parts.length < 2)
+            throw new IllegalArgumentException(MessageConstant.INSUFFICIENT_ARGUMENT + MessageConstant.HELP_COMMAND_MESSAGE);
+
         this.customerName = parts[1];
         return this;
     }

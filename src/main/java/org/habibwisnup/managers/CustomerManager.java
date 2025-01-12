@@ -49,6 +49,10 @@ public class CustomerManager {
         return currentCustomer;
     }
 
+    public boolean isLoggedIn() {
+        return currentCustomer != null;
+    }
+
     public CustomerService getCustomer(String name) {
         return customers.get(name);
     }

@@ -67,8 +67,6 @@ public class Customer {
                     System.out.println("Owed by " + entry.getKey() + ": $" + entry.getValue());
                 }
             }
-
-
         }
     }
 }

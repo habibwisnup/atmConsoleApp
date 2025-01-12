@@ -3,6 +3,7 @@ package org.habibwisnup.factory.commands;
 import org.habibwisnup.factory.Command;
 import org.habibwisnup.managers.CustomerManager;
 import org.habibwisnup.utils.MessageConstant;
+import org.habibwisnup.utils.errorHandler.exceptions.InvalidAmountException;
 
 public class DepositCommand implements Command {
     private CustomerManager customerManager;
@@ -14,10 +15,17 @@ public class DepositCommand implements Command {
 
     @Override
     public Command initialize(String[] parts) {
-        if (parts.length < 2) {
-            throw new IllegalArgumentException("DepositCommand requires an amount.");
+        if (parts.length < 2)
+            throw new IllegalArgumentException(MessageConstant.INSUFFICIENT_ARGUMENT + MessageConstant.HELP_COMMAND_MESSAGE);
+
+        try {
+            this.amount = Integer.parseInt(parts[1]);
+            if (amount <= 0)
+                throw new InvalidAmountException(MessageConstant.INVALID_AMOUNT_MESSAGE);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(MessageConstant.NUMERIC_VALIDATION_MESSAGE);
         }
-        this.amount = Integer.parseInt(parts[1]);
+
         return this;
     }
 

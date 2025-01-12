@@ -2,7 +2,9 @@ package org.habibwisnup.factory.commands;
 
 import org.habibwisnup.factory.Command;
 import org.habibwisnup.managers.CustomerManager;
+import org.habibwisnup.utils.MessageConstant;
 import org.habibwisnup.utils.errorHandler.ErrorHandler;
+import org.habibwisnup.utils.errorHandler.exceptions.InvalidAmountException;
 
 public class TransferCommand implements Command {
 
@@ -66,8 +68,18 @@ public class TransferCommand implements Command {
 
     @Override
     public Command initialize(String[] parts) {
+        if (parts.length < 3)
+            throw new IllegalArgumentException(MessageConstant.INSUFFICIENT_ARGUMENT + MessageConstant.HELP_COMMAND_MESSAGE);
+
         this.targetName = parts[1];
-        this.amount = Integer.parseInt(parts[2]);
+
+        try {
+            this.amount = Integer.parseInt(parts[2]);
+            if (amount <= 0)
+                throw new InvalidAmountException(MessageConstant.INVALID_AMOUNT_MESSAGE);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(MessageConstant.NUMERIC_VALIDATION_MESSAGE);
+        }
         return this;
     }
 }

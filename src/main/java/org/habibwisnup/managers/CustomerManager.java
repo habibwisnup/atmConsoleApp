@@ -54,6 +54,10 @@ public class CustomerManager {
     }
 
     public CustomerService getCustomer(String name) {
+        if (currentCustomer == null) {
+            return null;
+        }
+
         return customers.get(name);
     }
 

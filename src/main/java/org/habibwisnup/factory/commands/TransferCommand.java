@@ -26,6 +26,11 @@ public class TransferCommand implements Command {
                 return;
             }
 
+            if (sender.getCustomer().getName().equals(receiver.getCustomer().getName())) {
+                System.out.println("Transfer to the same account is not allowed.");
+                return;
+            }
+
             var senderBalance = sender.getCustomer().getBalance();
             var transferableAmount = Math.min(amount, senderBalance);
             var debtAmount = amount - transferableAmount;

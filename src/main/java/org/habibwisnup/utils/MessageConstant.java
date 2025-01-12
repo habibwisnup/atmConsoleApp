@@ -8,7 +8,7 @@ public class MessageConstant {
     public static final String BALANCE_COMMAND = "balance";
     public static final String LOGOUT_COMMAND = "logout";
     public static final String EXIT_COMMAND = "exit";
-
+    public static final String HELP_COMMAND = "help";
     public static final String USER_ALREADY_LOGIN = "Another user is already logged in. Please logout first.";
     public static final String INSUFFICIENT_BALANCE_MESSAGE = "Insufficient balance.";
     public static final String INVALID_AMOUNT_MESSAGE = "Amount must be greater than zero.";

@@ -25,6 +25,7 @@ public class CustomerService implements ICustomerService {
             customer.setBalance(customer.getBalance() + amount);
         } catch (Exception e) {
             ErrorHandler.handleException(e);
+            throw e;
         }
     }
 
@@ -40,6 +41,7 @@ public class CustomerService implements ICustomerService {
             customer.setBalance(customer.getBalance() - amount);
         } catch (Exception e) {
             ErrorHandler.handleException(e);
+            throw e;
         }
     }
 
@@ -49,6 +51,7 @@ public class CustomerService implements ICustomerService {
             customer.setDebt(customer.getDebt() + amount);
         } catch (Exception e) {
             ErrorHandler.handleException(e);
+            throw e;
         }
     }
 
@@ -61,6 +64,7 @@ public class CustomerService implements ICustomerService {
             customer.setDebt(customer.getDebt() - amount);
         } catch (Exception e) {
             ErrorHandler.handleException(e);
+            throw e;
         }
     }
 

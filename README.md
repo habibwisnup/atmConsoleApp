@@ -1,4 +1,4 @@
-Test assignment for ATM System with Factory Method Pattern, Strategy Pattern, Command Pattern
+ATM System with Factory Method Pattern, Strategy Pattern, Command Pattern
 
 ---
 
